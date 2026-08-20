@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>收到一条特别提醒</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background: linear-gradient(135deg, #ffeef2 0%, #ffd6e0 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 36px 24px;
+      box-shadow: 0 12px 30px rgba(255, 143, 171, 0.25);
+      text-align: center;
+      width: 100%;
+      max-width: 360px;
+      transition: all 0.3s ease;
+    }
+    .emoji {
+      font-size: 64px;
+      margin-bottom: 16px;
+      display: inline-block;
+      animation: bounce 2s infinite ease-in-out;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 28px;
+      line-height: 1.4;
+    }
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      min-height: 80px;
+    }
+    button {
+      border: none;
+      outline: none;
+      border-radius: 50px;
+      padding: 12px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    #yesBtn {
+      background: #ff5e7e;
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(255, 94, 126, 0.35);
+      z-index: 10;
+      transform-origin: center center;
+    }
+    #noBtn {
+      background: #f1f2f6;
+      color: #747d8c;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      white-space: nowrap;
+    }
+    /* 成功状态 */
+    .success-view {
+      display: none;
+    }
+    .success-title {
+      font-size: 26px;
+      color: #ff477e;
+      margin-bottom: 12px;
+    }
+    .success-desc {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="mainCard">
+    <!-- 交互区域 -->
+    <div id="askView">
+      <div class="emoji" id="mainEmoji">🥺</div>
+      <h1 id="questionText">你不许不开心！</h1>
+      <div class="btn-group">
+        <button id="yesBtn" onclick="handleYes()">好 💕</button>
+        <button id="noBtn" onclick="handleNo()">不好</button>
+      </div>
+    </div>
+
+    <!-- 成功后显示的内容 -->
+    <div class="success-view" id="successView">
+      <div class="emoji">🥰</div>
+      <h2 class="success-title">耶！答应啦！</h2>
+      <p class="success-desc">收到！今天和以后都要每天开开心心！✨</p>
+    </div>
+  </div>
+
+  <script>
+    let scale = 1;
+    let noClickCount = 0;
+
+    const noTexts = [
+      "不好",
+      "真的要拒绝吗？",
+      "再给你一次机会！",
+      "不许选这个！",
+      "乖乖选左边~",
+      "点不到了吧？",
+      "必须选好！💖"
+    ];
+
+    const emojis = ["🥺", "😣", "😭", "😤", "😡", "🙄"];
+
+    function handleNo() {
+      noClickCount++;
+      scale += 0.35; // 每次点击“好”按钮放大 35%
+
+      const yesBtn = document.getElementById('yesBtn');
+      const noBtn = document.getElementById('noBtn');
+      const emoji = document.getElementById('mainEmoji');
+
+      // 放大“好”按钮
+      yesBtn.style.transform = `scale(${scale})`;
+
+      // 改变“不好”按钮的文字
+      const textIndex = Math.min(noClickCount, noTexts.length - 1);
+      noBtn.innerText = noTexts[textIndex];
+
+      // 切换可怜/生气的表情
+      const emojiIndex = Math.min(noClickCount, emojis.length - 1);
+      emoji.innerText = emojis[emojiIndex];
+    }
+
+    function handleYes() {
+      document.getElementById('askView').style.display = 'none';
+      document.getElementById('successView').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
